@@ -1,4 +1,4 @@
-# backend-chat-processing-subsystem
+# Backend Chat Processing Subsystem
 This repo contains files that are responsible for the chat processing subsystem, as defined in the SDD. 
 
 # Pre-requisites
