@@ -8,3 +8,5 @@ transformers
 jupyterlab
 nbconvert
 duckduckgo-search
+yake
+nltk
