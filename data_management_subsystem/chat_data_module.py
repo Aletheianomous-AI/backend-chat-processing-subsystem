@@ -32,14 +32,13 @@ class ChatData():
         
         # CREATE SQL QUERY THAT UPLOADS CHAT DATA.
         upload_query = ("""
-            WITH ins1 AS(
-                INSERT INTO public.chat_history (chat_content, belongs_to_bot, time_of_output)
-                VALUES (""" + chat_data + ", " + str(is_from_bot) + "," + str(timestamp)+""")
-                RETURNING chat_id
-            )
-        INSERT INTO public.chat_user (chat_id, user_id)
-        SELECT chat_id, """ + str(self.userId) + """ FROM ins1
-        RETURNING chat_id;
+        BEGIN TRANSACTION
+        	DECLARE @ChatID int;
+        	INSERT INTO dbo.Chat_History (Chat_ID, Chat_Content, Belongs_To_Bot, Time_Of_Output)
+        	VALUES (""" + str(chat_id) + """, 'Hello, this is Alethianomous AI! How are you?', 1, '""" +str(current_time) + """');
+        	SELECT @ChatID = """ + str(chat_id) + """ ;
+        	INSERT INTO dbo.Chat_User (Chat_ID, UserID) VALUES (@ChatID, """ + str(self.userId)+  """);
+        COMMIT
         """
         )
     
