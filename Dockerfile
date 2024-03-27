@@ -1,7 +1,11 @@
 FROM python:3.10.13-bookworm
 
-RUN echo "deb http://archive.debian.org/debian stretch main" > /etc/apt/sources.list
-RUN apt-get update && apt-get install gcc pandoc texlive-xetex texlive-fonts-recommended texlive-plain-generic -y
+
+RUN apt-get update
+RUN apt-get install apt-transport-https aptitude -y
+RUN apt-get install wget -y
+RUN apt-get update
+RUN apt-get install gcc pandoc texlive-xetex texlive-fonts-recommended texlive-plain-generic -y
 
 WORKDIR /code
 
