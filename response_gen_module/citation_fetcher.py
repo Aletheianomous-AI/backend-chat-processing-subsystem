@@ -7,7 +7,7 @@ class Citation_Fetcher():
         raw_results = None
         try:
             search_instance = searcher()
-            raw_results = search_instance.text(query, max_results=5)
+            raw_results = search_instance.text(query, max_results=3)
         except ddgse:
             raise ddgse()
         return raw_results
