@@ -15,7 +15,7 @@ def generate_response():
         user_input = json_data['input']
         rg = ResponseGenerator()
         citations, ai_response = rg.generate(user_input)
-        return json.dumps({'success': True, 'citations': citations, output': ai_response}), 201
+        return json.dumps({'success': True, 'citations': citations, 'output': ai_response}), 201
     else:
         return json.dumps({'success': False}), 400
 
