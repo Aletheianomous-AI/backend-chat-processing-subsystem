@@ -25,4 +25,4 @@ def generate_response():
             return json.dumps({'success': False, 'exception_details': str(e)}), 500
 
 if __name__=="__main__":
-    app.run()
+    app.run(ssl_context='adhoc')
