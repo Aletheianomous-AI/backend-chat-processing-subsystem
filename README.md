@@ -20,4 +20,6 @@ You need to ensure that Docker is installed by following the [installation instr
 
 # Running Jupyterlab 
 To run Jupyter Lab, type `jupyter lab --ip 0.0.0.0 --no-browser --allow-root`. Copy the URL into your computer's browser.
+
+# Running Flask for Handling REST API calls
 To run Flask, type `flask run --host 0.0.0.0`.
