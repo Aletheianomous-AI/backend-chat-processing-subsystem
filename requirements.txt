@@ -10,3 +10,4 @@ nbconvert
 duckduckgo-search
 yake
 nltk
+flask
