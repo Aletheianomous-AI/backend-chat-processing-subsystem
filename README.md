@@ -2,7 +2,7 @@
 This repo contains files that are responsible for the chat processing subsystem, as defined in the SDD. 
 
 # Pre-requisites
-You need to ensure that Docker is installed by following the [installation instructions]
+You need to ensure that Docker is installed by following the installation instructions.
 
 # Setup
 ## Using Docker
