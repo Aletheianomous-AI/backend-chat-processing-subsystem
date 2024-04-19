@@ -18,7 +18,7 @@ class Citation_Fetcher():
         try:
             search_instance = searcher()
             raw_results = search_instance.text(query, max_results=3)
-            parsed_results = self.parse_results(raw_results)
+            results = Citation_Fetcher.parse_results(raw_results)
         except ddgse:
             raise ddgse()
-        return raw_results, parsed_results
+        return raw_results, results
