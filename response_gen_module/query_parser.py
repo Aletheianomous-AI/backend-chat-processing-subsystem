@@ -1,5 +1,7 @@
 from datetime import datetime as dt
-from transformers import AutoModelForCasualLM, AutoTokenizer, BitsAndBytesConfig, pipeline
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import pipeline as ple
+
 
 import gc
 import torch
@@ -17,10 +19,13 @@ class QueryParser():
             bnb_4bit_compute_dtype=torch.bfloat16,
             bnb_4bit_use_double_quant=False
         )
-        self.model = None
         self.model_path = model_path
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path + "/tokenizer",
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_path,
+                      quantization_config=self.bnb_config)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path + "tokenizer",
             trust_remote_code=True)
+        self.pipe = ple("text-generation", model=self.model, tokenizer=self.tokenizer,
+            torch_dtype=torch.bfloat16, device_map="auto")
         self.tokenizer.padding_side = 'right'
         self.tokenizer.pad_token = self.tokenizer.unk_token
         self.tokenizer.add_eos_token = True
@@ -52,13 +57,12 @@ class QueryParser():
         """
 
 
-        self.model = AutoModelForCasualLM.from_pretrained(self.model_path,
-            quantization_config=self.bnb_config)
+        
         prompt = self.apply_chat_template(input_str)
-        pipe = pipeline("text-generation", model=self.model, tokenizer=self.tokenizer,
-            torch_dtype=torch.bfloat16, device_map="auto")
-        query = pipe(prompt, max_new_tokens=256, do_sample=True, temperature=0.7, 
+        query = self.pipe(prompt, max_new_tokens=256, do_sample=True, temperature=0.7, 
                     top_k=50, top_p=0.95)
+        query = query[0]
+        query = query["generated_text"]
         query = query.split("<|assistant|>\n")
         query = query[1]
         query = query.split("<\s>")
