@@ -1,9 +1,12 @@
 accelerate
+datasets
 pandas
 numpy
 matplotlib
 pandoc
+spacy
 torch
+torchtext==0.6
 transformers
 jupyterlab
 nbconvert
