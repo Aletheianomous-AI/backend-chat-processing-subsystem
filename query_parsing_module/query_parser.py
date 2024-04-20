@@ -1,5 +1,5 @@
 from datetime import datetime as dt
-from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig
 from transformers import pipeline as ple
 
 import gc
@@ -19,8 +19,7 @@ class QueryParser():
             bnb_4bit_use_double_quant=False
         )
         self.model_path = model_path
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_path,
-                      quantization_config=self.bnb_config)
+        self.model = AutoModelForCausalLM.from_pretrained(self.model_path, quantization_config=self.bnb_config, trust_remote_code=True)
         self.tokenizer = AutoTokenizer.from_pretrained(model_path + "tokenizer",
             trust_remote_code=True)
         self.pipe = ple("text-generation", model=self.model, tokenizer=self.tokenizer,
@@ -86,7 +85,7 @@ class QueryParser():
             bnb_4bit_use_double_quant=False
         )
         self.model = AutoModelForCausalLM.from_pretrained(self.model_path,
-                      quantization_config=self.bnb_config)
+                      quantization_config=self.bnb_config, trust_remote_code=True)
         self.tokenizer = AutoTokenizer.from_pretrained(self.model_path + "tokenizer",
             trust_remote_code=True)
         self.pipe = ple("text-generation", model=self.model, tokenizer=self.tokenizer,

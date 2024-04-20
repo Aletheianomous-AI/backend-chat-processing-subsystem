@@ -20,12 +20,10 @@ from nltk import tokenize as sentence_delim
 
 
 import gc
-import nltk
 import os
 import re
 import sys
 import torch
-import yake
 
 
 # In[5]:
@@ -37,20 +35,13 @@ class ResponseGenerator():
         
         self.base_model = None
         self.base_system_msg = None
-        self.kw_extractor = yake.KeywordExtractor()
 
 
-    def generate(self, user_input: str, DEBUG_MODE=False):
+    def generate(self, user_input: str, search_query, DEBUG_MODE=False):
         if DEBUG_MODE:
             print("Debug mode has been enabled. Capturing runtime...\n")
             query_gen_start: dt = dt.now()
         query_results = None
-        nltk.download('punkt')
-        processed_input = sentence_delim.sent_tokenize(user_input)
-        last_sentence_index = len(processed_input) - 1
-        processed_input = processed_input[last_sentence_index]
-        self.kw_extractor = yake.KeywordExtractor()
-        keywords = self.kw_extractor.extract_keywords(processed_input)
 
         if DEBUG_MODE:
             query_gen_end: dt = dt.now()
@@ -70,20 +61,15 @@ class ResponseGenerator():
                 }
             ]
         
-        if len(keywords) > 0:
-            search_query = keywords[0][0]
+        if search_query is not None:
             if DEBUG_MODE:
                 print("Searching for: \"" + search_query + "\"...")
-            query_results = cf.search_online(search_query)
+            query_results, _ = cf.search_online(search_query)
             base_model_gen_msg.append({"role": "query_results", "content": query_results})
             current_time = dt.now()
             base_model_gen_msg[0]["content"] += ("You have submitted a query search engine that can help you answer the user's question. " + 
                                                  "Please summarize the query results that can best answer the user's question.")
 
-        self.kw_extractor = None
-        del self.kw_extractor
-        gc.collect()
-        torch.cuda.empty_cache()
         self.base_model = (pipeline("text-generation", model="HuggingFaceH4/zephyr-7b-alpha",
             torch_dtype = torch.bfloat16, device_map="auto"))
         base_model_prompt = self.base_model.tokenizer.apply_chat_template(base_model_gen_msg, tokenize=False, add_generation_prompt=True)
