@@ -38,9 +38,53 @@ class ResponseGenerator():
         self.base_model = None
         self.base_system_msg = None
         self.kw_extractor = yake.KeywordExtractor()
+        
+    def generate_conversation_title(self, user_input, DEBUG_MODE=False):
+        """Generates the title for the conversation of the user's input.
+        
+        PRE-REQUISITES
+        This function should only be called after the user posts
+            first message of conversation.
 
+        PARAMETERS
+        user_input - The user's message that has been sent to the chatbot.
+        DEBUG_MODE - If True, this function prints debugging messages.
+        """
+
+        base_model_gen_msg = [
+
+            {
+                "role": "system",
+                "content": """You are a friendly chatbot that provides reliable information to the user. The message you receive from the user is the first message in the conversation. Based on the user input, generate a title that best describes the conversation."""
+            },
+            {
+                "role": "user",
+                "content": user_input
+            }
+        ]
+        self.base_model = (pipeline("text-generation", model="HuggingFaceH4/zephyr-7b-alpha", 
+           torch_dtype = torch.bfloat16, device_map="auto"))
+        base_model_prompt = self.base_model.tokenizer.apply_chat_template(base_model_gen_msg, tokenize=False, add_generation_prompt=True)
+        conv_title = self.base_model(base_model_prompt, max_new_tokens=256, do_sample=True, temperature=0.7, top_k=50, top_p=0.95)
+        conv_title = conv_title[0]
+        conv_title = conv_title['generated_text']
+        conv_title = conv_title.split("<|assistant|>\n")
+        conv_title = conv_title[1]
+        conv_title = conv_title.split("Title: ")
+        conv_title = conv_title[1]
+        try:
+            conv_title = conv_title.split("\n")
+            conv_title = conv_title[0]
+        except:
+            conv_title = conv_title
+        self.base_model = None
+        del self.base_model
+        gc.collect()
+        torch.cuda.empty_cache()
+        return conv_title
 
     def generate(self, user_input: str, DEBUG_MODE=False):
+        """This function generates the response to the user's input."""
         if DEBUG_MODE:
             print("Debug mode has been enabled. Capturing runtime...\n")
             query_gen_start: dt = dt.now()
