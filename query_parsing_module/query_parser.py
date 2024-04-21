@@ -20,7 +20,7 @@ class QueryParser():
         )
         self.model_path = model_path
         self.model = AutoModelForCausalLM.from_pretrained(self.model_path, quantization_config=self.bnb_config, trust_remote_code=True)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_path + "tokenizer",
+        self.tokenizer = AutoTokenizer.from_pretrained(model_path + "/tokenizer",
             trust_remote_code=True)
         self.pipe = ple("text-generation", model=self.model, tokenizer=self.tokenizer,
             torch_dtype=torch.bfloat16, device_map="auto")
@@ -86,7 +86,7 @@ class QueryParser():
         )
         self.model = AutoModelForCausalLM.from_pretrained(self.model_path,
                       quantization_config=self.bnb_config, trust_remote_code=True)
-        self.tokenizer = AutoTokenizer.from_pretrained(self.model_path + "tokenizer",
+        self.tokenizer = AutoTokenizer.from_pretrained(self.model_path + "/tokenizer",
             trust_remote_code=True)
         self.pipe = ple("text-generation", model=self.model, tokenizer=self.tokenizer,
             torch_dtype=torch.bfloat16, device_map="auto")

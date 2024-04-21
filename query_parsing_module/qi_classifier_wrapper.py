@@ -4,8 +4,8 @@ import sys
 
 #Add modules from other folder descendents into memory.
 cur_dir = Path(os.getcwd())
+par_dir = cur_dir.parent.absolute()
 print(cur_dir)
-#par_dir = cur_dir.parent.absolute()
 sys.path.append(str(cur_dir) + "/data_management_subsystem")
 sys.path.append(str(cur_dir) + "/query_parsing_module")
 
@@ -52,8 +52,11 @@ class QIClassifierWrapper():
     # Run when allocating data
     self.TEXT = torch.load(self.model_path + "/vocab.pt")
     self.LABEL = torch.load(self.model_path + "/label_vocab.pt")
-    self.model = QIClassifier(1,1,1,1)
-    self.model = torch.load(self.model_path + "/model.pt")
+    self.model = QIClassifier(len(self.TEXT.vocab),256,512,2)
+    self.model.load_state_dict(torch.load(self.model_path + "/model_params.pt"))
+    cur_dir = Path(os.getcwd())
+    print(cur_dir)
+    print(sys.path)
     self.model = self.model.to(self.device)
     self.tokenizer = spacy.load("en_core_web_sm")
     self.is_allocated = True
@@ -82,8 +85,8 @@ class QIClassifierWrapper():
     
     self.TEXT = torch.load(self.model_path + "/vocab.pt")
     self.LABEL = torch.load(self.model_path + "/label_vocab.pt")
-    self.model = QIClassifier(1,1,1,1)
-    self.model = torch.load(self.model_path + "/model.pt")
+    self.model = QIClassifier(len(self.TEXT.vocab),256,512,2)
+    self.model.load_state_dict(torch.load(self.model_path + "/model_params.pt"))
     self.model = self.model.to(self.device)
     self.tokenizer = spacy.load("en_core_web_sm")
     self.is_allocated = True
