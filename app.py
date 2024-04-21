@@ -49,6 +49,23 @@ def generate_response():
     except Exception as e:
             traceback.print_exc()
             return json.dumps({'success': False, 'exception_details': str(e)}), 500
+        
+@app.route("/generate_conv_title/", methods=['POST'])
+def generate_conv_title():
+    """This function handles requests to generate title for user's conversations."""
+    try:
+        if request.method == "POST":
+            json_data = request.get_json(silent=False)
+            user_input = json_data['input']
+            
+            rg = ResponseGenerator()
+            title = rg.generate_conversation_title(user_input)
+            return json.dumps({'success': True, 'converation_title': title}), 201
+        else:
+            return json.dumps({'success': False}), 400
+    except Exception as e:
+            traceback.print_exc()
+            return json.dumps({'success': False, 'exception_details': str(e)}), 500
 
 @app.route("/generate_conv_title/", methods=['POST'])
 def generate_conv_title():
