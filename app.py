@@ -60,7 +60,7 @@ def generate_conv_title():
             
             rg = ResponseGenerator()
             title = rg.generate_conversation_title(user_input)
-            return json.dumps({'success': True, 'converation_title': title}), 201
+            return json.dumps({'success': True, 'conversation_title': title}), 201
         else:
             return json.dumps({'success': False}), 400
     except Exception as e:
