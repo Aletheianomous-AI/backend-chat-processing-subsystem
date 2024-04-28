@@ -19,9 +19,9 @@ class QueryParser():
             bnb_4bit_use_double_quant=False
         )
         self.model_path = model_path
-        self.model = AutoModelForCausalLM.from_pretrained(self.model_path, quantization_config=self.bnb_config, trust_remote_code=True)
+        self.model = AutoModelForCausalLM.from_pretrained(model_path, quantization_config=self.bnb_config, trust_remote_code=True)
         self.tokenizer = AutoTokenizer.from_pretrained(model_path + "/tokenizer",
-            trust_remote_code=True)
+            trust_remote_code=True, local_files_only=True)
         self.pipe = ple("text-generation", model=self.model, tokenizer=self.tokenizer,
             torch_dtype=torch.bfloat16, device_map="auto")
         self.tokenizer.padding_side = 'right'

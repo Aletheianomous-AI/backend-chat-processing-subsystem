@@ -1,6 +1,7 @@
 accelerate
 bitsandbytes
 datasets
+en-core-web-sm
 pandas
 numpy
 matplotlib
